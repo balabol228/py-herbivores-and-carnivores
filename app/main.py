@@ -1,5 +1,5 @@
 class Animal:
-    alive = []
+    alive: list["Animal"] = []
 
     def __init__(self, name: str) -> None:
         self.name = name
@@ -8,10 +8,11 @@ class Animal:
         Animal.alive.append(self)
 
     def __repr__(self) -> str:
-        return f"{{Name: {self.name}}}"
+        return (f"{{Name: {self.name}, Health: {self.health}, "
+                f"Hidden: {self.hidden}}}")
 
-    def die(self) -> str:
-        if self.health <= 0:
+    def die(self) -> None:
+        if self.health <= 0 and self in Animal.alive:
             Animal.alive.remove(self)
 
 
@@ -22,8 +23,6 @@ class Herbivore(Animal):
 
 class Carnivore(Animal):
     def bite(self, target: Animal) -> None:
-        isinstance(target, Herbivore)
         if isinstance(target, Herbivore) and not target.hidden:
             target.health -= 50
-            if target.healt <= 0 and target in Animal.alive:
-                Animal.alive.remove(target)
+            target.die()
